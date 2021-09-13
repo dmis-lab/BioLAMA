@@ -51,7 +51,7 @@ We provide two ways of probing PLMs with BioLAMA: 1) Manual Prompt 2) OptiPrompt
 
 ### Manual Prompt
 
-<em>Manual Prompt</em> probes PLMs using pre-defined manual prompts.
+<em>Manual Prompt</em> probes PLMs using pre-defined manual prompts. The predictions and scores will be logged in '/output'.
 
 ```
 # TASK=ctd
@@ -76,7 +76,7 @@ python ./scripts/run_manual.py \
 
 ### OptiPrompt
 
-<em>OptiPrompt</em> probes PLMs using embedding-based prompts starting from embeddings of manual prompts.
+<em>OptiPrompt</em> probes PLMs using embedding-based prompts starting from embeddings of manual prompts. The predictions and scores will be logged in '/output'.
 
 ```
 # TASK=ctd
