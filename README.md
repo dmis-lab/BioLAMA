@@ -47,11 +47,11 @@ rm -rf data.tar.gz
 
 ## Experiments
 
-We provide two ways of probing PLMs with BioLAMA: Manual Prompt and OptiPrompt.
+We provide two ways of probing PLMs with BioLAMA: 1) Manual Prompt 2) OptiPrompt
 
 ### Manual Prompt
 
-<br>Manual Prompt</br> probes PLMs using pre-defined manual prompts.
+<em>Manual Prompt</em> probes PLMs using pre-defined manual prompts.
 
 ```
 # TASK=ctd
@@ -76,7 +76,7 @@ python ./scripts/run_manual.py \
 
 ### OptiPrompt
 
-<br>OptiPrompt</br> probes PLMs using embedding-based prompts starting from embeddings of manual prompts.
+<em>OptiPrompt</em> probes PLMs using embedding-based prompts starting from embeddings of manual prompts.
 
 ```
 # TASK=ctd
@@ -106,8 +106,7 @@ python ./scripts/run_optiprompt.py \
     --seed 0 \
     --prompt_token_len 5 \
     --init_manual_template \
-    --output_dir ./output/${TASK}_optiprompt \
-    --draft
+    --output_dir ./output/${TASK}_optiprompt
 ```
 
 ## Demo
