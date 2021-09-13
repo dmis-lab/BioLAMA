@@ -141,7 +141,7 @@ hepatocellular carcinoma has symptoms such as jaundice.
 ```
 
 ## Acknowledgement
-Parts of the code are modified from [genewikiworld](https://github.com/SuLab/genewikiworld), [X-FACTR](https://github.com/jzbjyb/X-FACTR), [OptiPrompt](https://github.com/princeton-nlp/OptiPrompt), and [LANKA](https://github.com/c-box/LANKA). We appreciate the authors for making their projects open-sourced.
+Parts of the code are modified from [genewikiworld](https://github.com/SuLab/genewikiworld), [X-FACTR](https://github.com/jzbjyb/X-FACTR), and [OptiPrompt](https://github.com/princeton-nlp/OptiPrompt). We appreciate the authors for making their projects open-sourced.
 
 ## Citations
 ```bibtex
