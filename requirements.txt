@@ -1,0 +1,6 @@
+numpy==1.19.4
+transformers==4.4.1
+nltk
+tqdm
+wikidataintegrator
+stanza
