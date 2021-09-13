@@ -1,6 +1,6 @@
 # BioLAMA
 
-<em>BioLAMA</em> is biomedical factual knowledge triples for probing biomedical LMs. The triples are collected and pre-processed from three sources: CTD, UMLS, and Wikidata. Please see our paper [
+<b>BioLAMA</b> is biomedical factual knowledge triples for probing biomedical LMs. The triples are collected and pre-processed from three sources: CTD, UMLS, and Wikidata. Please see our paper [
 Can Language Models be Biomedical Knowledge Bases? (Sung et al., 2021)]() for more details.
 
 #### The dataset for the BioLAMA probe is available at mujeen@163.152.163.223:/home/mujeen/works/BioLAMA_open/data.tar.gz <br>
@@ -29,7 +29,7 @@ pip install -r requirements.txt
 
 ### Download Bio-LM
 We use the Bio-LM checkpoint released in [link](https://github.com/facebookresearch/bio-lm).
-Among various versions of Bio-LMs, we use `RoBERTa-base-PM-Voc-hf'.
+Among the various versions of Bio-LMs, we use `RoBERTa-base-PM-Voc-hf'.
 ```
 wget https://dl.fbaipublicfiles.com/biolm/RoBERTa-base-PM-Voc-hf.tar.gz
 tar -xzvf RoBERTa-base-PM-Voc-hf.tar.gz 
@@ -47,11 +47,13 @@ rm -rf data.tar.gz
 
 ## Experiments
 
-We provide two ways of probing PLMs with BioLAMA: 1) Manual Prompt 2) OptiPrompt
+We provide two ways of probing PLMs with BioLAMA:
+- Manual Prompt
+- OptiPrompt
 
 ### Manual Prompt
 
-<em>Manual Prompt</em> probes PLMs using pre-defined manual prompts. The predictions and scores will be logged in '/output'.
+<b>Manual Prompt</b> probes PLMs using pre-defined manual prompts. The predictions and scores will be logged in '/output'.
 
 ```
 # TASK=ctd
@@ -76,7 +78,7 @@ python ./scripts/run_manual.py \
 
 ### OptiPrompt
 
-<em>OptiPrompt</em> probes PLMs using embedding-based prompts starting from embeddings of manual prompts. The predictions and scores will be logged in '/output'.
+<b>OptiPrompt</b> probes PLMs using embedding-based prompts starting from embeddings of manual prompts. The predictions and scores will be logged in '/output'.
 
 ```
 # TASK=ctd
@@ -146,7 +148,7 @@ Parts of the code are modified from [genewikiworld](https://github.com/SuLab/gen
 @inproceedings{sung2021can,
     title={Can Language Models be Biomedical Knowledge Bases},
     author={Sung, Mujeen and Lee, Jinhyuk and Yi, Sean and Jeon, Minji and Kim, Sungdong and Kang, Jaewoo},
-    booktitle={EMNLP},
+    booktitle={Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
     year={2021},
 }
 ```
