@@ -9,8 +9,8 @@ Can Language Models be Biomedical Knowledge Bases? (Sung et al., 2021)]() for mo
 
 #### * The dataset for the BioLAMA probe is available at [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing)<br>
 
-## Demo
-We provide the CLI demo for manual prompts. When a subject is "flu" and you want to probe its symptoms from an LM, the input should be like "Flu has symptom such as \[Y\].". Before running the demo, please install resources following [Installation](#installation).
+## Getting Started
+After the [installation](#installation), you can easily try BioLAMA with manual prompts. When a subject is "flu" and you want to probe its symptoms from an LM, the input should be like "Flu has symptom such as \[Y\].". Before running the demo, please install resources following [Installation](#installation).
 
 ```
 #MODEL=bert-base-cased
