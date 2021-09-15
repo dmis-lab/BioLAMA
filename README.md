@@ -8,7 +8,7 @@
 Can Language Models be Biomedical Knowledge Bases? (Sung et al., 2021)]() for more details.
 
 #### * The dataset for the BioLAMA probe is available at [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing)<br>
-#### * BioLAMA(UMLS) is not provided due to the license. For those who want to probe LMs using UMLS, we provide the pre-processing scripts. Please follow [instruction](preprocessing/README.md).
+#### * BioLAMA(UMLS) is not provided due to the license. For those who want to probe LMs using triples of UMLS, we provide the pre-processing scripts for UMLS. Please follow [instruction](preprocessing/README.md).
 
 ## Demo
 We provide the CLI demo for manual prompts. When a subject is "flu" and you want to probe its symptoms from an LM, the input should be like "Flu has symptom such as \[Y\].". Before running the demo, please install resources following [Installation](#installation).
@@ -77,7 +77,7 @@ tar -xzvf RoBERTa-base-PM-Voc-hf.tar.gz
 rm -rf RoBERTa-base-PM-Voc-hf.tar.gz
 ```
 
-### Download datasets
+### Datasets
 
 The dataset will take about 78 MB of space. First download [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing) and uncompress it.
 
