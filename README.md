@@ -8,7 +8,6 @@
 Can Language Models be Biomedical Knowledge Bases? (Sung et al., 2021)]() for more details.
 
 #### * The dataset for the BioLAMA probe is available at [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing)<br>
-#### * BioLAMA(UMLS) is not provided due to the license. For those who want to probe LMs using triples of UMLS, we provide the pre-processing scripts for UMLS. Please follow [instruction](preprocessing/README.md).
 
 ## Demo
 We provide the CLI demo for manual prompts. When a subject is "flu" and you want to probe its symptoms from an LM, the input should be like "Flu has symptom such as \[Y\].". Before running the demo, please install resources following [Installation](#installation).
@@ -79,18 +78,48 @@ rm -rf RoBERTa-base-PM-Voc-hf.tar.gz
 
 ### Datasets
 
-The dataset will take about 78 MB of space. First download [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing) and uncompress it.
+The dataset will take about 78 MB of space. Download [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing) and uncompress it. 
 
 ```
 tar -xzvf data.tar.gz
 rm -rf data.tar.gz
 ```
 
+The directory tree of the data is like:
+```
+data
+├── ctd
+│   ├── entities
+│   ├── meta
+│   ├── prompts
+│   └── triples_processed
+│       └── CD1
+│           ├── dev.jsonl
+│           ├── test.jsonl
+│           └── train.jsonl
+├── wikidata
+│   ├── entities
+│   ├── meta
+│   ├── prompts
+│   └── triples_processed
+│       └── P2175
+│           ├── dev.jsonl
+│           ├── test.jsonl
+│           └── train.jsonl
+└── umls
+    ├── meta
+    └── prompts
+
+```
+
+<b>Important</b>: Triples of UMLS is not provided due to the license. For those who want to probe LMs using triples of UMLS, we provide the pre-processing scripts for UMLS. Please follow [instruction](preprocessing/README.md).
+
+
 ## Experiments
 
 We provide two ways of probing PLMs with BioLAMA:
-- Manual Prompt
-- OptiPrompt
+- [Manual Prompt](#manual-prompt)
+- [OptiPrompt](#optiprompt)
 
 ### Manual Prompt
 
