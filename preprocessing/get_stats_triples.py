@@ -67,6 +67,9 @@ def main(args):
 
     all_obj_counts = []
     print(f"PID\tTRAIN\tDEV\tTEST")
+    all_trains = 0
+    all_devs = 0
+    all_tests = 0
     for input_dir in input_dirs:
         pid = input_dir.split("/")[-1]
         train_file = os.path.join(input_dir, 'train.jsonl')
@@ -89,17 +92,13 @@ def main(args):
             obj_types = list(set(obj_types))
 
         print(f"{pid}\t{train_count}\t{dev_count}\t{test_count}")
-
-        train_obj_counts = get_obj_counts(train_file)
-        dev_obj_counts = get_obj_counts(dev_file)
-        test_obj_counts = get_obj_counts(test_file)
-
-        all_obj_counts.extend(train_obj_counts)
-        all_obj_counts.extend(dev_obj_counts)
-        all_obj_counts.extend(test_obj_counts)
-
-    avg_obj_counts = sum(all_obj_counts) / len(all_obj_counts)
-    # print(f"Average number of objects per subject: {avg_obj_counts:.4}")
+        
+        all_trains += train_count
+        all_devs += dev_count
+        all_tests += test_count
+    
+    print("================================")
+    print(f"TOTAL\t{all_trains}\t{all_devs}\t{all_tests}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -1,78 +1,10 @@
 # Data construction
 
-## Wikidata
-
-```
-# Extract bio entities and their names from wikidata
-python ./process_wikidata_entities.py \
-    --output_dir ../data/wikidata/entities
-
-# Extract bio triples from wikidata
-python ./process_wikidata_triples.py \
-    --property_path ../data/wikidata/meta/properties.tsv \
-    --entity_dir ../data/wikidata/entities \
-    --output_dir ../data/wikidata/triples
-
-# Filter triples based on max length
-python ./filter_length.py \
-    --input_dir "../data/wikidata/triples/*.jsonl" \
-    --output_dir "../data/wikidata/triples_10sw" \
-    --model_name bert-base-cased \
-    --max_length 10
-
-# Aggregate data
-python ./aggregate_data.py \
-    --input_path "../data/wikidata/triples_10sw/*.jsonl" \
-    --entity_dir ../data/wikidata/entities \
-    --model_name_or_path bert-base-cased \
-    --output_dir ../data/wikidata/triples_processed \
-    --sub_obj_type_path ../data/wikidata/meta/sub_obj_types.json \
-    --min_count 500 \
-    --max_count 2000
-
-# Get triple stats
-python ./get_stats_triples.py \
-    --data_dir '../data/wikidata/triples_processed/*' \
-    --property_path '../data/wikidata/meta/properties.tsv' \
-    --type_path ../data/wikidata/meta/types.json
-```
-
-## CTD
-```
-# Extract bio triples from CTD
-python ./process_ctd.py \
-    --output_dir ../data/ctd/triples \
-    --genes_dict ../data/ctd/entities/NCBI_human_gene_20210407.json \
-    --chemicals_dict ../data/ctd/rawdata/CTD_chemicals_20210401.tsv \
-    --diseases_dict ../data/ctd/rawdata/CTD_diseases_20210401.tsv \
-    --chemicals_genes_file ../data/ctd/rawdata/CTD_chem_gene_ixns_20210401.tsv \
-    --chemicals_phenotypes_file ../data/ctd/rawdata/CTD_pheno_term_ixns_20210401.tsv \
-    --chemicals_diseases_file ../data/ctd/rawdata/CTD_chemicals_diseases_20210401.tsv \
-    --genes_pathways_file ../data/ctd/rawdata/CTD_genes_pathways_20210401.tsv \
-    --genes_diseases_file ../data/ctd/rawdata/CTD_genes_diseases_20210401.tsv
-
-# Filter triples based on max length
-python ./filter_length.py \
-    --input_dir "../data/ctd/triples/*.jsonl" \
-    --output_dir "../data/ctd/triples_10sw" \
-    --model_name bert-base-cased \
-    --max_length 10
-
-# Aggregate data
-python ./aggregate_data.py \
-    --input_path "../data/ctd/triples_10sw/*.jsonl" \
-    --model_name_or_path bert-base-cased \
-    --output_dir ../data/ctd/triples_processed \
-    --min_count 500 \
-    --max_count 2000
-
-# get triple stats
-python ./get_stats_triples.py \
-    --data_dir '../data/ctd/triples_processed/*' \
-    --property_path '../data/ctd/meta/properties.tsv'
-```
+## Quick Link
+* [UMLS](#umls)
 
 ## UMLS
+Before starting pre-processing UMLS, you need to download raw data from [2020AB UMLS Metathesaurus Files](https://www.nlm.nih.gov/research/umls/licensedcontent/umlsarchives04.html#2020AB).
 ```
 # Extract bio triples from UMLS
 python ./process_umls.py \
@@ -99,6 +31,29 @@ python ./aggregate_data.py \
 
 # get triple stats
 python ./get_stats_triples.py \
-    --data_dir '../data/umls/triples_processed/*' \
-    --property_path '../data/umls/meta/properties.tsv'
+    --data_dir '../../BioLAMA_CR/data/umls/triples_10sw_agg/*' \
+    --property_path '../../BioLAMA_CR/data/umls/meta/properties.tsv'
+```
+
+Statistics
+```
+PID     TRAIN   DEV     TEST
+UR44    452     113     566
+UR221   241     61      302
+UR45    772     193     965
+UR48    700     176     876
+UR211   650     162     813
+UR214   459     115     574
+UR256   244     62      306
+UR588   621     156     777
+UR254   672     169     841
+UR180   346     87      434
+UR116   668     167     835
+UR625   381     96      477
+UR173   512     128     640
+UR49    615     154     769
+UR50    663     166     829
+UR124   463     116     580
+================================
+TOTAL   8459    2121    10584
 ```
