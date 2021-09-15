@@ -31,8 +31,8 @@ python ./aggregate_data.py \
 
 # get triple stats
 python ./get_stats_triples.py \
-    --data_dir '../../BioLAMA_CR/data/umls/triples_10sw_agg/*' \
-    --property_path '../../BioLAMA_CR/data/umls/meta/properties.tsv'
+    --data_dir '../data/umls/triples_processed/*' \
+    --property_path '../data/umls/meta/properties.tsv'
 ```
 
 Statistics
