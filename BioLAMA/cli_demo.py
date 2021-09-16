@@ -63,7 +63,7 @@ def main():
     )
 
     while True:
-        text = input("Type input (e.g., Flu has symptom such as [Y].):\n")
+        text = input("Please enter input (e.g., Flu has symptom such as [Y].):\n")
         if "[Y]" not in text:
             print("[Warning] Please type in the proper format.\n")
             continue
