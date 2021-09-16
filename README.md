@@ -21,7 +21,7 @@ python ./BioLAMA/cli_demo.py \
 
 Result:
 ```
-Type input (e.g., Flu has symptoms such as [Y].):
+Please enter input (e.g., Flu has symptoms such as [Y].):
 hepatocellular carcinoma has symptoms such as [Y].
 -------------------------
 Rank    Prob    Pred
