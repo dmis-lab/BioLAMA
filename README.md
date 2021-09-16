@@ -124,11 +124,8 @@ We provide two ways of probing PLMs with BioLAMA:
 <b>Manual Prompt</b> probes PLMs using pre-defined manual prompts. The predictions and scores will be logged in '/output'.
 
 ```
-# TASK=ctd
-# TASK=umls
-#MODEL=bert-base-cased
-#MODEL=dmis-lab/biobert-base-cased-v1.2
-
+# Set TASK to 'ctd' for CTD or 'umls' for UMLS
+# Set MODEL to 'bert-base-cased' for BERT or 'dmis-lab/biobert-base-cased-v1.2' for BioBERT
 TASK=wikidata
 MODEL=./RoBERTa-base-PM-Voc/RoBERTa-base-PM-Voc-hf
 PROMPT_PATH=./data/${TASK}/prompts/manual.jsonl
@@ -165,11 +162,8 @@ MACRO   11.97   25.92
 <b>OptiPrompt</b> probes PLMs using embedding-based prompts starting from embeddings of manual prompts. The predictions and scores will be logged in '/output'.
 
 ```
-#TASK=ctd
-#TASK=umls
-#MODEL=bert-base-cased
-#MODEL=dmis-lab/biobert-base-cased-v1.2
-
+# Set TASK to 'ctd' for CTD or 'umls' for UMLS
+# Set MODEL to 'bert-base-cased' for BERT or 'dmis-lab/biobert-base-cased-v1.2' for BioBERT
 TASK=wikidata
 MODEL=./RoBERTa-base-PM-Voc/RoBERTa-base-PM-Voc-hf
 PROMPT_PATH=./data/${TASK}/prompts/manual.jsonl
