@@ -110,7 +110,7 @@ data
 
 ```
 
-<b>Important</b>: Triples of UMLS is not provided due to the license. For those who want to probe LMs using triples of UMLS, we provide the pre-processing scripts for UMLS. Please follow [instruction](preprocessing/README.md).
+<b>Important</b>: Triples of UMLS is not provided due to the license. For those who want to probe LMs using triples of UMLS, we provide the pre-processing scripts for UMLS. Please follow this [instruction](preprocessing/README.md).
 
 
 ## Experiments
