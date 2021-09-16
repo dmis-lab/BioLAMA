@@ -5,7 +5,7 @@
 </div>
 
 <b>BioLAMA</b> is biomedical factual knowledge triples for probing biomedical LMs. The triples are collected and pre-processed from three sources: CTD, UMLS, and Wikidata. Please see our paper [
-Can Language Models be Biomedical Knowledge Bases? (Sung et al., 2021)]() for more details.
+Can Language Models be Biomedical Knowledge Bases? (Sung et al., 2021)](http://arxiv.org/abs/2109.07154) for more details.
 
 #### * The dataset for the BioLAMA probe is available at [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing)<br>
 
