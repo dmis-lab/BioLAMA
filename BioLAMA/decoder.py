@@ -154,10 +154,12 @@ class Decoder():
                     log_prob = b_logprob[j][i].masked_select(
                         b_mask_ind[i].eq(1)).detach().cpu().numpy().reshape(-1).sum(-1)
 
-                    # length norm
+                    # length normalization
+                    # 0.0 length_norm_coeff means shorter predictions are favored.
+                    # 1.0 length_norm_coeff means models are adjusted to favor longer predictions.
                     length_norm_coeff = 0.0
-                    lp = np.power(mask_len,length_norm_coeff)
-                    prob = np.exp(log_prob / lp)            
+                    mask_len_norm = np.power(mask_len,length_norm_coeff)
+                    prob = np.exp(log_prob / mask_len_norm)            
 
                     pred = merge_subwords(pred, self.tokenizer, merge=True)
 
