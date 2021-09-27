@@ -170,7 +170,6 @@ PROMPT_PATH=./data/${TASK}/prompts/manual.jsonl
 TRAIN_PATH=./data/${TASK}/triples_processed/*/train.jsonl
 DEV_PATH=./data/${TASK}/triples_processed/*/dev.jsonl
 TEST_PATH=./data/${TASK}/triples_processed/*/test.jsonl
-PROMPT_PATH=./data/${TASK}/prompts/manual.jsonl
 
 python ./BioLAMA/run_optiprompt.py \
     --model_name_or_path ${MODEL} \
