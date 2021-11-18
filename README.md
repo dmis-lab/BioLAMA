@@ -173,6 +173,19 @@ P780    12.98   33.43
 MACRO   7.28    18.51
 ```
 
+### IE Baseline (BEST)
+
+<b>BEST (Biomedical Entity Search Tool)</b> is a returns relevant biomedical entity given a query. By constructing the query We used <b>BEST</b> as an information extraction baseline.
+
+```
+TASK=wikidata
+TEST_PATH=./data/${TASK}/triples_processed/*/test.jsonl
+CUDA_VISIBLE_DEVICES=0 python ./BioLAMA/run_ie.py \
+    --test_path "${TEST_PATH}" \
+    --output_dir ./output/${TASK}_ie
+```
+
+
 ## Acknowledgement
 Parts of the code are modified from [genewikiworld](https://github.com/SuLab/genewikiworld), [X-FACTR](https://github.com/jzbjyb/X-FACTR), and [OptiPrompt](https://github.com/princeton-nlp/OptiPrompt). We appreciate the authors for making their projects open-sourced.
 
