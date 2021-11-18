@@ -5,16 +5,15 @@
 </div>
 
 <b>BioLAMA</b> is biomedical factual knowledge triples for probing biomedical LMs. The triples are collected and pre-processed from three sources: CTD, UMLS, and Wikidata. Please see our paper [
-Can Language Models be Biomedical Knowledge Bases? (Sung et al., 2021)]() for more details.
+Can Language Models be Biomedical Knowledge Bases? (Sung et al., 2021)](http://arxiv.org/abs/2109.07154) for more details.
 
-#### The dataset for the BioLAMA probe is available at [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing)<br>
+#### * The dataset for the BioLAMA probe is available at [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing)<br>
 
-#### Please note that, the dataset of UMLS is not provided due to the license. For those who want to probe LMs using UMLS, we provide the pre-processing scripts. Please see [instruction](preprocessing/README.md).
-
-## Demo
-We provide the CLI demo for manual prompts. When a subject is "flu" and you want to probe its symptoms from an LM, the input should be like "Flu has symptom such as \[Y\].". Please note that, before running the demo, install resources following [Installation](#installation).
+## Getting Started
+After the [installation](#installation), you can easily try BioLAMA with manual prompts. When a subject is "flu" and you want to probe its symptoms from an LM, the input should be like "Flu has symptom such as \[Y\]."
 
 ```
+# Set MODEL to bert-base-cased for BERT or dmis-lab/biobert-base-cased-v1.2 for BioBERT
 MODEL=./RoBERTa-base-PM-Voc/RoBERTa-base-PM-Voc-hf
 python ./BioLAMA/cli_demo.py \
     --model_name_or_path ${MODEL}
@@ -22,7 +21,7 @@ python ./BioLAMA/cli_demo.py \
 
 Result:
 ```
-Type input (e.g., Flu has symptoms such as [Y].):
+Please enter input (e.g., Flu has symptoms such as [Y].):
 hepatocellular carcinoma has symptoms such as [Y].
 -------------------------
 Rank    Prob    Pred
@@ -63,37 +62,70 @@ pip install -r requirements.txt
 
 ## Resources
 
-### Download Bio-LM
-We use the Bio-LM checkpoint released in [link](https://github.com/facebookresearch/bio-lm).
-Among the various versions of Bio-LMs, we use `RoBERTa-base-PM-Voc-hf'.
+### Models
+For BERT and BioBERT, we use checkpoints provided in the Huggingface Hub:
+- [best-base-cased](https://huggingface.co/bert-base-cased) (for BERT)
+- [dmis-lab/biobert-base-cased-v1.2](https://huggingface.co/dmis-lab/biobert-base-cased-v1.2) (for BioBERT)
+
+Bio-LM is not provided in the Huggingface Hub. Therefore, we use the Bio-LM checkpoint released in [link](https://github.com/facebookresearch/bio-lm). Among the various versions of Bio-LMs, we use `RoBERTa-base-PM-Voc-hf'.
 ```
 wget https://dl.fbaipublicfiles.com/biolm/RoBERTa-base-PM-Voc-hf.tar.gz
 tar -xzvf RoBERTa-base-PM-Voc-hf.tar.gz 
 rm -rf RoBERTa-base-PM-Voc-hf.tar.gz
 ```
 
-### Download datasets
+### Datasets
 
-The dataset will take about 78 MB of space. First download [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing) and uncompress it.
+The dataset will take about 78 MB of space. Download [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing) and uncompress it. 
 
 ```
 tar -xzvf data.tar.gz
 rm -rf data.tar.gz
 ```
 
+The directory tree of the data is like:
+```
+data
+├── ctd
+│   ├── entities
+│   ├── meta
+│   ├── prompts
+│   └── triples_processed
+│       └── CD1
+│           ├── dev.jsonl
+│           ├── test.jsonl
+│           └── train.jsonl
+├── wikidata
+│   ├── entities
+│   ├── meta
+│   ├── prompts
+│   └── triples_processed
+│       └── P2175
+│           ├── dev.jsonl
+│           ├── test.jsonl
+│           └── train.jsonl
+└── umls
+    ├── meta
+    └── prompts
+
+```
+
+<b>Important</b>: Triples of UMLS is not provided due to the license. For those who want to probe LMs using triples of UMLS, we provide the pre-processing scripts for UMLS. Please follow this [instruction](preprocessing/README.md).
+
+
 ## Experiments
 
 We provide two ways of probing PLMs with BioLAMA:
-- Manual Prompt
-- OptiPrompt
+- [Manual Prompt](#manual-prompt)
+- [OptiPrompt](#optiprompt)
 
 ### Manual Prompt
 
 <b>Manual Prompt</b> probes PLMs using pre-defined manual prompts. The predictions and scores will be logged in '/output'.
 
 ```
-# TASK=ctd
-# TASK=umls
+# Set TASK to 'ctd' for CTD or 'umls' for UMLS
+# Set MODEL to 'bert-base-cased' for BERT or 'dmis-lab/biobert-base-cased-v1.2' for BioBERT
 TASK=wikidata
 MODEL=./RoBERTa-base-PM-Voc/RoBERTa-base-PM-Voc-hf
 PROMPT_PATH=./data/${TASK}/prompts/manual.jsonl
@@ -130,15 +162,14 @@ MACRO   11.97   25.92
 <b>OptiPrompt</b> probes PLMs using embedding-based prompts starting from embeddings of manual prompts. The predictions and scores will be logged in '/output'.
 
 ```
-# TASK=ctd
-# TASK=umls
+# Set TASK to 'ctd' for CTD or 'umls' for UMLS
+# Set MODEL to 'bert-base-cased' for BERT or 'dmis-lab/biobert-base-cased-v1.2' for BioBERT
 TASK=wikidata
 MODEL=./RoBERTa-base-PM-Voc/RoBERTa-base-PM-Voc-hf
 PROMPT_PATH=./data/${TASK}/prompts/manual.jsonl
 TRAIN_PATH=./data/${TASK}/triples_processed/*/train.jsonl
 DEV_PATH=./data/${TASK}/triples_processed/*/dev.jsonl
 TEST_PATH=./data/${TASK}/triples_processed/*/test.jsonl
-PROMPT_PATH=./data/${TASK}/prompts/manual.jsonl
 
 python ./BioLAMA/run_optiprompt.py \
     --model_name_or_path ${MODEL} \
