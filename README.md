@@ -76,9 +76,10 @@ rm -rf RoBERTa-base-PM-Voc-hf.tar.gz
 
 ### Datasets
 
-The dataset will take about 78 MB of space. Download [data.tar.gz](https://drive.google.com/file/d/1pGISF2JI0dYx5Gmhb_PyuXj6FeorbeaX/view?usp=sharing) and uncompress it. 
+The dataset will take about 78 MB of space.
 
 ```
+wget http://nlp.dmis.korea.edu/projects/biolama/data.tar.gz
 tar -xzvf data.tar.gz
 rm -rf data.tar.gz
 ```
