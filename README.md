@@ -7,8 +7,9 @@
 <b>BioLAMA</b> is biomedical factual knowledge triples for probing biomedical LMs. The triples are collected and pre-processed from three sources: CTD, UMLS, and Wikidata. Please see our paper [
 Can Language Models be Biomedical Knowledge Bases? (Sung et al., 2021)](http://arxiv.org/abs/2109.07154) for more details.
 
-#### * The dataset for the BioLAMA probe is available at [here](https://drive.google.com/file/d/1ZVm_4QqJ21fS5vIvUSTaMKxePhME6Nn0/view?usp=sharing).<br>
-
+### Updates
+* \[**Mar 17, 2022**\] The BioLAMA probe with the CTD/UMLS/Wikidata triples are released [here](https://drive.google.com/file/d/1CcjpmNuAXavL3aMjwVqiiziMu3OGDyyG/view?usp=sharing).
+ 
 ## Getting Started
 After the [installation](#installation), you can easily try BioLAMA with manual prompts. When a subject is "flu" and you want to probe its symptoms from an LM, the input should be like "Flu has symptom such as \[Y\]."
 
@@ -76,12 +77,11 @@ rm -rf RoBERTa-base-PM-Voc-hf.tar.gz
 
 ### Datasets
 
-The dataset will take about 78 MB of space.
+The dataset will take about 85 MB of space. You can download the dataset [here](https://drive.google.com/file/d/1CcjpmNuAXavL3aMjwVqiiziMu3OGDyyG/view?usp=sharing).
 
 ```
-wget http://nlp.dmis.korea.edu/projects/biolama/data.tar.gz
-tar -xzvf data.tar.gz
-rm -rf data.tar.gz
+tar -xzvf data_v1.1.tar.gz
+rm -rf data_v1.1.tar.gz
 ```
 
 The directory tree of the data is like:
@@ -108,11 +108,14 @@ data
 └── umls
     ├── meta
     └── prompts
+    └── triples_processed
+        └── UR44
+            ├── dev.jsonl
+            ├── test.jsonl
+            └── train.jsonl
+    
 
 ```
-
-<b>Important</b>: Triples of UMLS is not provided due to the license. For those who want to probe LMs using triples of UMLS, we provide the pre-processing scripts for UMLS. Please follow this [instruction](preprocessing/README.md).
-
 
 ## Experiments
 
