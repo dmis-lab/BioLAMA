@@ -80,8 +80,8 @@ rm -rf RoBERTa-base-PM-Voc-hf.tar.gz
 The dataset will take about 85 MB of space. You can download the dataset [here](https://drive.google.com/file/d/1CcjpmNuAXavL3aMjwVqiiziMu3OGDyyG/view?usp=sharing).
 
 ```
-tar -xzvf data_v1.1.tar.gz
-rm -rf data_v1.1.tar.gz
+tar -xzvf data.tar.gz
+rm -rf data.tar.gz
 ```
 
 The directory tree of the data is like:
