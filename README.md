@@ -65,7 +65,7 @@ pip install -r requirements.txt
 
 ### Models
 For BERT and BioBERT, we use checkpoints provided in the Huggingface Hub:
-- [best-base-cased](https://huggingface.co/bert-base-cased) (for BERT)
+- [bert-base-cased](https://huggingface.co/bert-base-cased) (for BERT)
 - [dmis-lab/biobert-base-cased-v1.2](https://huggingface.co/dmis-lab/biobert-base-cased-v1.2) (for BioBERT)
 
 Bio-LM is not provided in the Huggingface Hub. Therefore, we use the Bio-LM checkpoint released in [link](https://github.com/facebookresearch/bio-lm). Among the various versions of Bio-LMs, we use `RoBERTa-base-PM-Voc-hf'.
