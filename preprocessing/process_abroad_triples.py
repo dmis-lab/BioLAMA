@@ -7,6 +7,7 @@ import statistics
 import re
 import csv
 import json
+import random
 from transformers import AutoTokenizer
 
 # Run me: python preprocessing/process_abroad_triples.py --input_pairs="data/np/pre-processing/taxon-np-list.csv" --input_taxa_names="data/np/pre-processing/ALL-taxons-ids-names.tsv" --input_chem_main_names="data/np/pre-processing/wikidata/np_names_wikidata.tsv" --input_chem_syn_names="data/np/pre-processing/wikidata/np_synonyms_wikidata.tsv" --property="rP703" --topn=100 --outdir="data/np/triples_processed"
