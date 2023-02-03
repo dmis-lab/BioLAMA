@@ -77,7 +77,7 @@ def prepare_json_data(pairs, topn, topk, taxa_names, np_names, np_synonyms, prop
     # init
     triples_to_probe = {}
 
-    # extract top n
+    # extract top n of the most supported relations fungi <-> np (the most supported = those supported by the most of references)
     pairs = pairs.sort_values(by="counts", ascending=False)
     if topn is not None:
         pairs = pairs[0:topn]
