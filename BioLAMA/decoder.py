@@ -286,7 +286,8 @@ def iter_decode_beam_search(model,
     assert init_method in {'independent', 'order', 'confidence'}
     assert iter_method in {'none', 'order', 'confidence', 'confidence-multi'}
     bs, sl = inp_tensor.size(0), inp_tensor.size(1)
-    init_mask = inp_tensor.eq(mask_value).long()  # SHAPE: (batch_size, seq_len)
+    # init_mask = inp_tensor.eq(mask_value).long()  # SHAPE: (batch_size, seq_len)
+    init_mask = raw_mask
     init_has_mask = init_mask.sum().item() > 0
 
     if iter_method == 'confidence-multi':

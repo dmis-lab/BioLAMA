@@ -18,7 +18,7 @@ do
         PROMPTNAME="${PROMPTFILE%.*}"
 
         echo "-- compute pronpt analysis"
-        # python ./BioLAMA/run_manual.py \
+        python ./BioLAMA/run_manual.py \
             --model_name_or_path ${MODEL[i]} \
             --prompt_path ${PROMPT_PATH} \
             --test_path "${TEST_PATH}" \
