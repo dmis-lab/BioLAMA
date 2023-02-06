@@ -115,6 +115,20 @@ class Decoder():
         attention_mask = attention_mask.view(batch_size,self.NUM_MASK,-1)
         mask_ind = mask_ind.view(batch_size,self.NUM_MASK,-1)
 
+        # HERE IF masked_subject is not None, it means that the subject has been MASKED. So we MUST REMOVE ITS INDEX FROM THE ONES USE FOR THE PREDICTIONS.
+        # If the subject is before [Y] in the template -> the first [MASK] is removed
+        # If the subject is after [Y] in the template -> the last [MASK] is removed
+        # The subject has been masked when there is one MASK token more than expected, so whem the sum of mask_ind > i (num_mask) + 1
+        for b in range(len(mask_ind)):
+            if sum(mask_ind[b][1]) > 2:
+                print("[INFO] data with MASKED subject detected.")
+                # It is the last token ?
+                if (mask_ind[b][1] == 1).nonzero(as_tuple=True)[0][1] == (mask_ind[b][1] == 1).nonzero(as_tuple=True)[0][0] + 1:
+                    for i in range(self.NUM_MASK):
+                        mask_ind[b][i][((mask_ind[b][i] == 1).nonzero(as_tuple=True)[0][-1])] = 0
+                else:
+                    for i in range(self.NUM_MASK):
+                        mask_ind[b][i][((mask_ind[b][i] == 1).nonzero(as_tuple=True)[0][0])] = 0
         out_tensors=[]
         logprobs=[]
         for nm in range(self.NUM_MASK):
@@ -147,20 +161,6 @@ class Decoder():
                 mask_len = i + 1
                 preds = []
                 probs = []
-
-                # HERE IF masked_subject is not None, it means that the subject has been MASKED. So we MUST REMOVE ITS INDEX FROM THE ONES USE FOR THE PREDICTIONS.
-                # If the subject is before [Y] in the template -> the first [MASK] is removed
-                # If the subject is after [Y] in the template -> the last [MASK] is removed
-                # The subject has been masked when there is one MASK token more than expected, so whem the sum of mask_ind > i (num_mask) + 1
-                if sum(b_mask_ind[i]) > (i + 1):
-                    print("[WARNING] A supplementery MASKED token has been found. Must correspond to a MASKED subject token, Remove from pred")
-                    # It is the last token ?
-                    if (b_mask_ind[1] == 1).nonzero(as_tuple=True)[0][1] == (b_mask_ind[1] == 1).nonzero(as_tuple=True)[0][0] + 1:
-                        b_mask_ind[i][((b_mask_ind == 1).nonzero(as_tuple=True)[0][-1])] = 0
-                        print("its the last")
-                    else:
-                        b_mask_ind[i][((b_mask_ind == 1).nonzero(as_tuple=True)[0][0])] = 0
-                        print(print("its the first"))
                 
                 for j in range(self.BEAM_SIZE):
                     pred: np.ndarray = b_out_tensor[j][i].masked_select(

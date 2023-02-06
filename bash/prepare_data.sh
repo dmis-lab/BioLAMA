@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-TOPN=20
+TOPN=1000
 python preprocessing/process_abroad_triples.py  \
     --input_pairs="data/np/pre-processing/taxon-np-list.csv"  \
     --input_taxa_names="data/np/pre-processing/ALL-taxons-ids-names.tsv"  \
