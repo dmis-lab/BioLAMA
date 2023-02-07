@@ -1,6 +1,7 @@
 import pdb
 from typing import List, Dict, Tuple, Union
 import torch
+import transformers
 import numpy as np
 from tqdm import tqdm
 from transformers import (
@@ -115,6 +116,20 @@ class Decoder():
         attention_mask = attention_mask.view(batch_size,self.NUM_MASK,-1)
         mask_ind = mask_ind.view(batch_size,self.NUM_MASK,-1)
 
+        # HERE IF masked_subject is not None, it means that the subject has been MASKED. So we MUST REMOVE ITS INDEX FROM THE ONES USE FOR THE PREDICTIONS.
+        # If the subject is before [Y] in the template -> the first [MASK] is removed
+        # If the subject is after [Y] in the template -> the last [MASK] is removed
+        # The subject has been masked when there is one MASK token more than expected, so whem the sum of mask_ind > i (num_mask) + 1
+        for b in range(len(mask_ind)):
+            if sum(mask_ind[b][1]) > 2:
+                print("[INFO] data with MASKED subject detected.")
+                # It is the last token ?
+                if (mask_ind[b][1] == 1).nonzero(as_tuple=True)[0][1] == (mask_ind[b][1] == 1).nonzero(as_tuple=True)[0][0] + 1:
+                    for i in range(self.NUM_MASK):
+                        mask_ind[b][i][((mask_ind[b][i] == 1).nonzero(as_tuple=True)[0][-1])] = 0
+                else:
+                    for i in range(self.NUM_MASK):
+                        mask_ind[b][i][((mask_ind[b][i] == 1).nonzero(as_tuple=True)[0][0])] = 0
         out_tensors=[]
         logprobs=[]
         for nm in range(self.NUM_MASK):
@@ -147,19 +162,18 @@ class Decoder():
                 mask_len = i + 1
                 preds = []
                 probs = []
-
+                
                 for j in range(self.BEAM_SIZE):
                     pred: np.ndarray = b_out_tensor[j][i].masked_select(
                         b_mask_ind[i].eq(1)).detach().cpu().numpy().reshape(-1)
                     log_prob = b_logprob[j][i].masked_select(
                         b_mask_ind[i].eq(1)).detach().cpu().numpy().reshape(-1).sum(-1)
-
                     # length normalization
                     # 0.0 length_norm_coeff => mask_len_norm == 1. In this case, shorter predictions are favored.
                     # 1.0 length_norm_coeff => mask_len_norm == mask_len. In this case, models are adjusted to favor longer predictions.
                     length_norm_coeff = 0.0
                     mask_len_norm = np.power(mask_len,length_norm_coeff)
-                    prob = np.exp(log_prob / mask_len_norm)            
+                    prob = np.exp(log_prob / mask_len_norm)
 
                     pred = merge_subwords(pred, self.tokenizer, merge=True)
 
@@ -238,20 +252,40 @@ def merge_subwords(ids: Union[np.ndarray, List[int]], tokenizer, merge: bool=Fal
         merged_subword = merged_subword.strip()
         return merged_subword
 
-def model_prediction_wrap(model, inp_tensor, attention_mask):
-    with torch.no_grad():
-        logit = model(inp_tensor, attention_mask=attention_mask)[0]
+# def model_prediction_wrap(model, inp_tensor, attention_mask):
+#     with torch.no_grad():
+#         logit = model(inp_tensor, attention_mask=attention_mask)[0]
 
-    if hasattr(model, 'cls'):  # bert
-        bias = model.cls.predictions.bias
-    elif hasattr(model, 'lm_head'):  # roberta
-        bias = model.lm_head.bias
-    elif hasattr(model, 'pred_layer'):  # xlm
-        bias = 0.0
+#     if hasattr(model, 'cls'):  # bert
+#         bias = model.cls.predictions.bias
+#     elif hasattr(model, 'lm_head'):  # roberta
+#         bias = model.lm_head.bias
+#     elif hasattr(model, 'pred_layer'):  # xlm
+#         bias = 0.0
+#     else:
+#         raise Exception('not sure whether the bias is correct')
+#     logit = logit - bias
+#     
+#     return logit
+
+# Fix this !
+def model_prediction_wrap(model, inp_tensor, attention_mask):
+    logit = model(inp_tensor, attention_mask=attention_mask)[0]
+    if transformers.__version__ in {'2.4.1', '2.4.0'}:
+        if hasattr(model, 'cls'):  # bert
+            bias = model.cls.predictions.bias
+        elif hasattr(model, 'lm_head'):  # roberta
+            bias = model.lm_head.bias
+        elif hasattr(model, 'pred_layer'):  # xlm
+            bias = 0.0
+        else:
+            raise Exception('not sure whether the bias is correct')
+        logit = logit - bias
+    elif transformers.__version__ in {'2.3.0'}:
+        pass
     else:
-        raise Exception('not sure whether the bias is correct')
-    logit = logit - bias
-    
+        # raise Exception('not sure whether version {} is correct'.format(transformers.__version__))
+        pass
     return logit
 
 def iter_decode_beam_search(model,
@@ -273,7 +307,8 @@ def iter_decode_beam_search(model,
     assert init_method in {'independent', 'order', 'confidence'}
     assert iter_method in {'none', 'order', 'confidence', 'confidence-multi'}
     bs, sl = inp_tensor.size(0), inp_tensor.size(1)
-    init_mask = inp_tensor.eq(mask_value).long()  # SHAPE: (batch_size, seq_len)
+    # init_mask = inp_tensor.eq(mask_value).long()  # SHAPE: (batch_size, seq_len)
+    init_mask = raw_mask.clone()
     init_has_mask = init_mask.sum().item() > 0
 
     if iter_method == 'confidence-multi':
