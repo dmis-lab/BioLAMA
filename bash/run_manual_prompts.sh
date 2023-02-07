@@ -41,7 +41,7 @@ do
                 --max_iter 10 \
                 --beam_size 5 \
                 --batch_size 16 \
-                --output_dir ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER} > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/log.log
+                --output_dir ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER} > ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/log.log
 
             echo "-- compute pronpt bias"
             mkdir -p ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED
@@ -56,7 +56,7 @@ do
                 --max_iter 10 \
                 --beam_size 5 \
                 --batch_size 16 \
-                --output_dir ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED/log.log
+                --output_dir ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED > ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED/log.log
             done
         done
     done
