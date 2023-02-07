@@ -5,3 +5,4 @@ RoBERTa-base-PM-Voc
 output*
 BioLAMA.egg-info
 analysis
+bash/test.sh

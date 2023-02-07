@@ -28,7 +28,7 @@ do
             --max_iter 10 \
             --beam_size 5 \
             --batch_size 16 \
-            --output_dir ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}
+            --output_dir ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME} > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/log.log
 
         echo "-- compute pronpt bias"
         python ./BioLAMA/run_manual.py \
@@ -41,7 +41,7 @@ do
             --max_iter 10 \
             --beam_size 5 \
             --batch_size 16 \
-            --output_dir "./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/MASKED"
+            --output_dir ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/MASKED > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/MASKED/log.log
 
     done
 done
