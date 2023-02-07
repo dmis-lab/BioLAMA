@@ -1,7 +1,8 @@
 import torch
 from transformers import (
     AutoTokenizer,
-    AutoModelWithLMHead
+    AutoModelWithLMHead,
+    AutoModelForMaskedLM
 )
 
 import json
@@ -36,7 +37,7 @@ def main():
 
     print(f'load model {args.model_name_or_path}')
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, use_fast=False)
-    lm_model = AutoModelWithLMHead.from_pretrained(args.model_name_or_path)
+    lm_model = AutoModelForMaskedLM.from_pretrained(args.model_name_or_path)
     if torch.cuda.is_available():
         lm_model = lm_model.cuda()
 

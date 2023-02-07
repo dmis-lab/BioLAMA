@@ -2,6 +2,6 @@ __pycache__
 data
 data.tar.gz
 RoBERTa-base-PM-Voc
-output
+output*
 BioLAMA.egg-info
 analysis

@@ -1,6 +1,7 @@
 import pdb
 from typing import List, Dict, Tuple, Union
 import torch
+import transformers
 import numpy as np
 from tqdm import tqdm
 from transformers import (
@@ -172,7 +173,7 @@ class Decoder():
                     # 1.0 length_norm_coeff => mask_len_norm == mask_len. In this case, models are adjusted to favor longer predictions.
                     length_norm_coeff = 0.0
                     mask_len_norm = np.power(mask_len,length_norm_coeff)
-                    prob = np.exp(log_prob / mask_len_norm)            
+                    prob = np.exp(log_prob / mask_len_norm)
 
                     pred = merge_subwords(pred, self.tokenizer, merge=True)
 
@@ -251,20 +252,40 @@ def merge_subwords(ids: Union[np.ndarray, List[int]], tokenizer, merge: bool=Fal
         merged_subword = merged_subword.strip()
         return merged_subword
 
-def model_prediction_wrap(model, inp_tensor, attention_mask):
-    with torch.no_grad():
-        logit = model(inp_tensor, attention_mask=attention_mask)[0]
+# def model_prediction_wrap(model, inp_tensor, attention_mask):
+#     with torch.no_grad():
+#         logit = model(inp_tensor, attention_mask=attention_mask)[0]
 
-    if hasattr(model, 'cls'):  # bert
-        bias = model.cls.predictions.bias
-    elif hasattr(model, 'lm_head'):  # roberta
-        bias = model.lm_head.bias
-    elif hasattr(model, 'pred_layer'):  # xlm
-        bias = 0.0
+#     if hasattr(model, 'cls'):  # bert
+#         bias = model.cls.predictions.bias
+#     elif hasattr(model, 'lm_head'):  # roberta
+#         bias = model.lm_head.bias
+#     elif hasattr(model, 'pred_layer'):  # xlm
+#         bias = 0.0
+#     else:
+#         raise Exception('not sure whether the bias is correct')
+#     logit = logit - bias
+#     
+#     return logit
+
+# Fix this !
+def model_prediction_wrap(model, inp_tensor, attention_mask):
+    logit = model(inp_tensor, attention_mask=attention_mask)[0]
+    if transformers.__version__ in {'2.4.1', '2.4.0'}:
+        if hasattr(model, 'cls'):  # bert
+            bias = model.cls.predictions.bias
+        elif hasattr(model, 'lm_head'):  # roberta
+            bias = model.lm_head.bias
+        elif hasattr(model, 'pred_layer'):  # xlm
+            bias = 0.0
+        else:
+            raise Exception('not sure whether the bias is correct')
+        logit = logit - bias
+    elif transformers.__version__ in {'2.3.0'}:
+        pass
     else:
-        raise Exception('not sure whether the bias is correct')
-    logit = logit - bias
-    
+        # raise Exception('not sure whether version {} is correct'.format(transformers.__version__))
+        pass
     return logit
 
 def iter_decode_beam_search(model,
