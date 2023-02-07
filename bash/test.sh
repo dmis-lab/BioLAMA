@@ -1,9 +1,11 @@
 TASK="np"
 TEST_PATH=./data/${TASK}/triples_processed/*/test.jsonl
-MODELNAME=("PubMedBERT-full" "BioBERT")
-MODELTYPE=("BERT" "BERT")
-MODEL=("microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext" "dmis-lab/biobert-base-cased-v1.2")
-PROMPT_DIR_PATH=./data/${TASK}/prompts
+MODELNAME=("PubMedBERT")
+MODELTYPE=("BERT")
+INITMETHODS=("confidence")
+ITERMETHODS=("none")
+MODEL=("microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract")
+PROMPT_DIR_PATH=./data/${TASK}/ss_prompts
 
 for i in "${!MODEL[@]}"
 do
@@ -17,31 +19,48 @@ do
         PROMPTFILE=$(basename $PROMPT_PATH)
         PROMPTNAME="${PROMPTFILE%.*}"
 
-        echo "-- compute pronpt analysis"
-        python ./BioLAMA/run_manual.py \
-            --model_name_or_path ${MODEL[i]} \
-            --prompt_path ${PROMPT_PATH} \
-            --test_path "${TEST_PATH}" \
-            --init_method independent \
-            --iter_method confidence \
-            --num_mask 3 \
-            --max_iter 10 \
-            --beam_size 10 \
-            --batch_size 16 \
-            --output_dir ./output2/${TASK}/${MODELNAME[i]}/${PROMPTNAME} > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/log.log
+        for INIT in "${INITMETHODS[@]}"
+        do
+        
+        echo "TEST WITH INIT METHOD = ${INIT}"
 
-        echo "-- compute pronpt bias"
-        python ./BioLAMA/run_manual.py \
-            --model_name_or_path ${MODEL[i]} \
-            --prompt_path ${PROMPT_PATH} \
-            --test_path "./data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
-            --init_method order \
-            --iter_method confidence \
-            --num_mask 10 \
-            --max_iter 10 \
-            --beam_size 5 \
-            --batch_size 16 \
-            --output_dir ./output2/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/MASKED > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/MASKED/log.log
+        for ITER in "${ITERMETHODS[@]}"
+        do
+            echo "TEST WITH ITER METHOD = ${ITER}"
+            
+            echo "-- compute pronpt analysis"
+            echo "coucou"
+            mkdir -p ./output2/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}
+            echo "coucou"
 
+            python ./BioLAMA/run_manual.py \
+                --model_name_or_path ${MODEL[i]} \
+                --prompt_path ${PROMPT_PATH} \
+                --test_path "${TEST_PATH}" \
+                --init_method ${INIT} \
+                --iter_method ${ITER} \
+                --num_mask 10 \
+                --max_iter 10 \
+                --beam_size 5 \
+                --batch_size 16 \
+                --output_dir ./output2/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER} > ./output2/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/log.log
+
+            echo "-- compute pronpt bias"
+
+            mkdir -p ./output2/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED
+
+            python ./BioLAMA/run_manual.py \
+                --model_name_or_path ${MODEL[i]} \
+                --prompt_path ${PROMPT_PATH} \
+                --test_path "./data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
+                --init_method ${INIT} \
+                --iter_method ${ITER} \
+                --num_mask 10 \
+                --max_iter 10 \
+                --beam_size 5 \
+                --batch_size 16 \
+                --output_dir ./output2/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED > ./output2/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED/log.log
+            done
+        done
     done
 done
