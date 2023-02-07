@@ -22,26 +22,26 @@ do
             --model_name_or_path ${MODEL[i]} \
             --prompt_path ${PROMPT_PATH} \
             --test_path "${TEST_PATH}" \
-            --init_method confidence \
-            --iter_method none \
+            --init_method independent \
+            --iter_method confidence \
             --num_mask 3 \
             --max_iter 10 \
             --beam_size 10 \
             --batch_size 16 \
-            --output_dir ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME} > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/log.log
+            --output_dir ./output2/${TASK}/${MODELNAME[i]}/${PROMPTNAME} > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/log.log
 
         echo "-- compute pronpt bias"
         python ./BioLAMA/run_manual.py \
             --model_name_or_path ${MODEL[i]} \
             --prompt_path ${PROMPT_PATH} \
             --test_path "./data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
-            --init_method confidence \
-            --iter_method none \
+            --init_method order \
+            --iter_method confidence \
             --num_mask 10 \
             --max_iter 10 \
             --beam_size 5 \
             --batch_size 16 \
-            --output_dir ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/MASKED > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/MASKED/log.log
+            --output_dir ./output2/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/MASKED > ./output/${TASK}/${MODELNAME[i]}/${PROMPTNAME}/MASKED/log.log
 
     done
 done

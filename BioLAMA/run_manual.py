@@ -139,10 +139,10 @@ def main():
         acc5 = performance['acc@5']
         acc1s.append(acc1)
         acc5s.append(acc5)
-        print(f"{pid}\t{round(acc1,2)}\t{round(acc5,2)}")
+        print(f"{pid}\t{round(acc1,5)}\t{round(acc5,5)}")
         
     print("-------------------------")
-    print(f"MACRO\t{round(np.mean(acc1s),2)}\t{round(np.mean(acc5s),2)}")
+    print(f"MACRO\t{round(np.mean(acc1s),5)}\t{round(np.mean(acc5s),5)}")
 
 if __name__ == '__main__':
     main()
