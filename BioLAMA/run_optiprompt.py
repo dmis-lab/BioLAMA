@@ -85,17 +85,13 @@ def convert_manual_to_dense(manual_template, base_model, tokenizer):
     template = ' '.join(template)
     return template
 
-def load_model(model_name, tokenizer, random_init='none'):
+def load_model(model_name, tokenizer, device, random_init='none'):
     if isinstance(tokenizer, BertTokenizer):
-        lm_model = BertForMaskedLM.from_pretrained(
-            model_name
-        ).cuda()
+        lm_model = BertForMaskedLM.from_pretrained(model_name).to(device)
         base_model = lm_model.bert
 
     elif isinstance(tokenizer, RobertaTokenizer): 
-        lm_model = RobertaForMaskedLM.from_pretrained(
-            model_name
-        ).cuda()
+        lm_model = RobertaForMaskedLM.from_pretrained(model_name).to(device)
         base_model = lm_model.roberta
 
     else:
@@ -189,6 +185,15 @@ def main():
     dev_files = sorted(glob.glob(args.dev_path))
     test_files = sorted(glob.glob(args.test_path))
 
+    device = torch.device("cpu")
+    # check for torch device:
+    if torch.cuda.is_available():       
+        device = torch.device("cuda")
+        print(f'There are {torch.cuda.device_count()} GPU(s) available.')
+        print('Device name:', torch.cuda.get_device_name(0))
+    else:
+        print('No GPU available, using the CPU instead.')
+
     if args.pids == None:
         pids = [f.split("/")[-2] for f in test_files]
     else:
@@ -260,7 +265,8 @@ def main():
 
         lm_model, base_model = load_model(
             model_name=args.model_name_or_path, 
-            tokenizer=tokenizer, 
+            tokenizer=tokenizer,
+            device=device
         )
         # load_optiprompt if the checkpoint exists
         prepare_for_dense_prompt(lm_model, tokenizer)
@@ -344,7 +350,7 @@ def main():
                         mask_token = train_dataset.mask_token,
                     )
 
-                    output = lm_model(input_ids=inputs.cuda(), labels=labels.cuda())
+                    output = lm_model(input_ids=inputs.to(device), labels=labels.to(device))
                     loss = output[0]
                     loss = loss.mean()
 
