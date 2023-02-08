@@ -46,6 +46,8 @@ class Decoder():
         self.PAD_IDX = self.tokenizer.pad_token_id
         self.UNK_IDX = self.tokenizer.unk_token_id
 
+        self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+
         if isinstance(tokenizer, BertTokenizer):
             self.mask_token = '[MASK]'
             self.pad_token = '[PAD]'
@@ -105,10 +107,9 @@ class Decoder():
         attention_mask = inp_tensor.ne(self.PAD_IDX).long()
         mask_ind = inp_tensor.eq(self.MASK_IDX).long()
         
-        if torch.cuda.is_available():
-            inp_tensor = inp_tensor.cuda()
-            attention_mask = attention_mask.cuda()
-            mask_ind = mask_ind.cuda()
+        inp_tensor = inp_tensor.to(self.device)
+        attention_mask = attention_mask.to(self.device)
+        mask_ind = mask_ind.to(self.device)
 
         batch_size = int(len(sentences)/self.NUM_MASK)
         # SHAPE: (batch_size, num_mask, seq_len)
