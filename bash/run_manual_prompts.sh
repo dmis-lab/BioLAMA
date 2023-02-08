@@ -1,4 +1,6 @@
+
 TASK="np"
+BATCHSIZE=32
 TEST_PATH=./data/${TASK}/triples_processed/*/test.jsonl
 MODELNAME=("ChemicalBERT" "BioBERT" "PubMedBERT" "PubMedBERT-full")
 MODELTYPE=("BERT" "BERT" "BERT" "BERT")
@@ -32,31 +34,31 @@ do
             mkdir -p ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}
 
             python ./BioLAMA/run_manual.py \
-                --model_name_or_path ${MODEL[i]} \
-                --prompt_path ${PROMPT_PATH} \
+                --model_name_or_path "${MODEL[i]}" \
+                --prompt_path "${PROMPT_PATH}" \
                 --test_path "${TEST_PATH}" \
-                --init_method ${INIT} \
-                --iter_method ${ITER} \
+                --init_method "${INIT}" \
+                --iter_method "${ITER}" \
                 --num_mask 10 \
                 --max_iter 10 \
                 --beam_size 5 \
-                --batch_size 16 \
-                --output_dir ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER} > ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/log.log
+                --batch_size ${BATCHSIZE} \
+                --output_dir "./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}" > ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/log.log
 
             echo "-- compute pronpt bias"
             mkdir -p ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED
 
             python ./BioLAMA/run_manual.py \
-                --model_name_or_path ${MODEL[i]} \
-                --prompt_path ${PROMPT_PATH} \
+                --model_name_or_path "${MODEL[i]}" \
+                --prompt_path "${PROMPT_PATH}" \
                 --test_path "./data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
-                --init_method ${INIT} \
-                --iter_method ${ITER} \
+                --init_method "${INIT}" \
+                --iter_method "${ITER}" \
                 --num_mask 10 \
                 --max_iter 10 \
                 --beam_size 5 \
-                --batch_size 16 \
-                --output_dir ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED > ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED/log.log
+                --batch_size ${BATCHSIZE} \
+                --output_dir "./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED" > ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED/log.log
             done
         done
     done

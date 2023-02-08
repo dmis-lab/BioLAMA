@@ -35,11 +35,20 @@ def main():
         args.output_dir = args.output_dir + "_draft"
     os.makedirs(args.output_dir, exist_ok=True)
 
+    # Set device
+    device = torch.device("cpu")
+    if torch.cuda.is_available():       
+        device = torch.device("cuda")
+        print(f'There are {torch.cuda.device_count()} GPU(s) available.')
+        print('Device name:', torch.cuda.get_device_name(0))
+    else:
+        print('No GPU available, using the CPU instead.')
+
     print(f'load model {args.model_name_or_path}')
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, use_fast=False)
     lm_model = AutoModelForMaskedLM.from_pretrained(args.model_name_or_path)
-    if torch.cuda.is_available():
-        lm_model = lm_model.cuda()
+    
+    lm_model = lm_model.to(device)
 
     # make sure this is only an evaluation
     lm_model.eval()
