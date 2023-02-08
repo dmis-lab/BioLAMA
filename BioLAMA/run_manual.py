@@ -39,7 +39,11 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, use_fast=False)
     lm_model = AutoModelForMaskedLM.from_pretrained(args.model_name_or_path)
     if torch.cuda.is_available():
+        print(f'There are {torch.cuda.device_count()} GPU(s) available.')
+        print('Device name:', torch.cuda.get_device_name(0))
         lm_model = lm_model.cuda()
+    else:
+        print('No GPU available, using the CPU instead.')
 
     # make sure this is only an evaluation
     lm_model.eval()
