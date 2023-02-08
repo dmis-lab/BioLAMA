@@ -84,6 +84,8 @@ def prepare_json_data(pairs, topn, topk, taxa_names, np_names, np_synonyms, prop
 
     # if subject is a taxon
     if property == "rP703":
+        nb = len(set((pairs["taxon_id"].tolist())))
+        print(f"total number of available taxa: {nb}")
         
         for taxon_id, taxon_pairs in pairs.groupby("taxon_id"):
 
@@ -111,6 +113,9 @@ def prepare_json_data(pairs, topn, topk, taxa_names, np_names, np_synonyms, prop
 
     # if subject is a natural product
     if property == "P703":
+
+        nb = len(set((pairs["pubchem_id"].tolist())))
+        print(f"total number of available compounds: {nb}")
         
         for pubchem_id, np_pairs in pairs.groupby("pubchem_id"):
 
