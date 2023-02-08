@@ -6,3 +6,4 @@ output*
 BioLAMA.egg-info
 analysis
 bash/test.sh
+jobs/**
