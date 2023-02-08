@@ -56,7 +56,7 @@ do
                     --draft \
                     --pids rP703 \
                     --prompt_token_len ${PROMPT_TOKEN_LEN} \
-                    --output_dir "{DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}"
+                    --output_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}"
 
                 echo "-- compute pronpt bias"
                 mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}/MASKED
@@ -66,7 +66,7 @@ do
                     --train_path "${TRAIN_PATH}" \
                     --dev_path "${DEV_PATH}" \
                     --test_path "${DIR}/data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
-                    --prompt_vector_dir "{DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}" \
+                    --prompt_vector_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}_draft" \
                     --num_mask 10 \
                     --init_method ${INIT} \
                     --iter_method ${ITER} \
@@ -112,7 +112,7 @@ do
                     --train_path "${TRAIN_PATH}" \
                     --dev_path "${DEV_PATH}" \
                     --test_path "${DIR}/data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
-                    --prompt_vector_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}" \ 
+                    --prompt_vector_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}_imt_draft" \
                     --num_mask 10 \
                     --init_method ${INIT} \
                     --iter_method ${ITER} \
