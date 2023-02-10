@@ -199,8 +199,8 @@ def main():
     else:
         pids = args.pids.split(",")
 
-    if args.init_manual_template:
-        args.output_dir = args.output_dir + "_imt"
+#     if args.init_manual_template:
+#        args.output_dir = args.output_dir + "_imt"
 
     if args.draft:
         args.output_dir = args.output_dir + "_draft"
