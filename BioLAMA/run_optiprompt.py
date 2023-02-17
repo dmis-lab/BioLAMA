@@ -193,7 +193,7 @@ def main():
     parser.add_argument("--pids", default=None)
     parser.add_argument("--output_dir", default=None)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--reset", type=str, required=False, choice=["embedding", "all"], default=None)
+    parser.add_argument("--reset", type=str, required=False, choices=["embedding", "all"], default=None)
 
     args = parser.parse_args()
 
