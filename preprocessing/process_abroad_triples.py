@@ -106,7 +106,7 @@ def prepare_json_data(pairs, topn, topk, taxa_names, np_names, np_synonyms, prop
             'sub_type': "mycobank-taxon",
             'sub_aliases': taxa_names[taxa_names["acceptedID"] == taxa_names[taxa_names["ID"] == taxon_id]["acceptedID"].item()]["name"].tolist(),
             'obj_uris': subset["pubchem_id"].tolist(),
-            'obj_labels': np_names[np_names["CID"].isin(subset["pubchem_id"].tolist())]["label"].tolist(),
+            'obj_labels': [np_names[np_names["CID"] == id]["label"].item() for id in subset["pubchem_id"].tolist()],
             'obj_types': ["pubchem"] * len(subset),
             'obj_aliases':[np_synonyms[np_synonyms["CID"] == pubchem_id]["label"].tolist() for pubchem_id in subset["pubchem_id"].tolist()]
         }
@@ -134,7 +134,7 @@ def prepare_json_data(pairs, topn, topk, taxa_names, np_names, np_synonyms, prop
                 'sub_type': "pubchem",
                 'sub_aliases': np_synonyms[np_synonyms["CID"] == pubchem_id]["label"].tolist(),
                 'obj_uris': subset["taxon_id"].tolist(),
-                'obj_labels': taxa_names[taxa_names["ID"].isin(subset["taxon_id"].tolist())]["name"].tolist(),
+                'obj_labels': [taxa_names[taxa_names["ID"] == id]["name"].item() for id in subset["taxon_id"].tolist()],
                 'obj_types': ["mycobank-taxon"] * len(subset),
                 'obj_aliases':[taxa_names[taxa_names["acceptedID"] == taxa_names[taxa_names["ID"] == taxon_id]["acceptedID"].item()]["name"].tolist() for taxon_id in subset["taxon_id"].tolist()]
             }
