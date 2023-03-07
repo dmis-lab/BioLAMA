@@ -53,6 +53,7 @@ def set_seed(seed):
     """
     Set the random seed.
     """
+    print("- seed: " + str(seed))
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
