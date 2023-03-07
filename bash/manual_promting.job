@@ -1,13 +1,39 @@
+#!/bin/bash
+# WARNING: You MUST use bash to prevent errors
+
+## Sun's Grid Engine parameters
+#$ -N ComputeManualPrompting
+#$ -S /bin/bash
+#$ -M mdelmas@idiap.ch
+#$ -P abroad
+#$ -cwd
+
+## Environment
+# WARNING: your ~/.bashrc will NOT be loaded by SGE
+# WARNING: do NOT load your default ~/.bashrc environment blindly; it will most likely break SGE!
+# WARNING: include ONLY the SETSHELLs required for the job at hand; some SETSHELLs will break SGE!
+# ... SETSHELL
+. /idiap/resource/software/initfiles/shrc
+SETSHELL grid
+
+
+export TRANSFORMERS_CACHE="/idiap/temp/mdelmas/.cache/huggingface/hub"
+export PATH="/idiap/temp/mdelmas/miniconda3/bin:$PATH"
+
+source activate prompting
+
+## Job
 
 TASK="np"
-BATCHSIZE=32
-TEST_PATH=./data/${TASK}/triples_processed/*/test.jsonl
+BATCHSIZE=64
+DIR="/idiap/temp/mdelmas/ABRoad/app/Exp-Taxa-NP"
+TEST_PATH=${DIR}/data/${TASK}/triples_processed/*/test.jsonl
 MODELNAME=("ChemicalBERT" "BioBERT" "PubMedBERT" "PubMedBERT-full")
 MODELTYPE=("BERT" "BERT" "BERT" "BERT")
 INITMETHODS=("independent" "order" "confidence")
 ITERMETHODS=("none" "order" "confidence")
 MODEL=("recobo/chemical-bert-uncased" "dmis-lab/biobert-base-cased-v1.2" "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract" "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext")
-PROMPT_DIR_PATH=./data/${TASK}/prompts
+PROMPT_DIR_PATH=${DIR}/data/${TASK}/prompts
 
 for i in "${!MODEL[@]}"
 do
@@ -31,9 +57,9 @@ do
             echo "TEST WITH ITER METHOD = ${ITER}"
             
             echo "-- compute pronpt analysis"
-            mkdir -p ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}
+            mkdir -p ${DIR}/output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}
 
-            python ./BioLAMA/run_manual.py \
+            python ${DIR}/BioLAMA/run_manual.py \
                 --model_name_or_path "${MODEL[i]}" \
                 --prompt_path "${PROMPT_PATH}" \
                 --test_path "${TEST_PATH}" \
@@ -43,22 +69,22 @@ do
                 --max_iter 10 \
                 --beam_size 5 \
                 --batch_size ${BATCHSIZE} \
-                --output_dir "./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}" > ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/log.log
+                --output_dir "${DIR}/output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}" > ${DIR}/output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/log.log
 
             echo "-- compute pronpt bias"
-            mkdir -p ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED
+            mkdir -p ${DIR}/output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED
 
-            python ./BioLAMA/run_manual.py \
+            python ${DIR}/BioLAMA/run_manual.py \
                 --model_name_or_path "${MODEL[i]}" \
                 --prompt_path "${PROMPT_PATH}" \
-                --test_path "./data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
+                --test_path "${DIR}/data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
                 --init_method "${INIT}" \
                 --iter_method "${ITER}" \
                 --num_mask 10 \
                 --max_iter 10 \
                 --beam_size 5 \
                 --batch_size ${BATCHSIZE} \
-                --output_dir "./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED" > ./output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED/log.log
+                --output_dir "${DIR}/output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED" > ${DIR}/output/${TASK}/manual/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED/log.log
             done
         done
     done

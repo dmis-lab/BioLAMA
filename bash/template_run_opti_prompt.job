@@ -31,8 +31,8 @@ PROMPT_TOKEN_LEN=20
 
 MODELNAME=("ChemicalBERT" "BioBERT" "PubMedBERT" "PubMedBERT-full")
 MODELTYPE=("BERT" "BERT" "BERT" "BERT")
-INITMETHODS=("order" "confidence")
-ITERMETHODS=("none" "confidence")
+INITMETHODS=("independant" "order" "confidence")
+ITERMETHODS=("none" "order" "confidence")
 MODEL=("recobo/chemical-bert-uncased" "dmis-lab/biobert-base-cased-v1.2" "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract" "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext") #  "
 
 PROMPTS=("${DIR}/data/${TASK}/prompts/manual1.jsonl" "${DIR}/data/${TASK}/prompts/manual2.jsonl" "FS") 
@@ -59,8 +59,7 @@ do
     if [ $PROMPT = "FS" ]
     then
         echo "-- compute pronpt analysis"
-        # mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}
-        mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}
+        mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}
 
         python ${DIR}/BioLAMA/run_optiprompt.py \
             --model_name_or_path "${MODEL[i]}" \
@@ -76,19 +75,18 @@ do
             --lr 3e-3 \
             --epochs 10 \
             --seed 0 \
-            --draft \
             --prompt_token_len ${PROMPT_TOKEN_LEN} \
-            --output_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}"
+            --output_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}" > ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}/log.log
 
         echo "-- compute pronpt bias"
-        mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}_draft/MASKED
+        mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}/MASKED
         
         python ${DIR}/BioLAMA/run_optiprompt.py \
             --model_name_or_path "${MODEL[i]}" \
             --train_path "${TRAIN_PATH}" \
             --dev_path "${DEV_PATH}" \
             --test_path "${DIR}/data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
-            --prompt_vector_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}_draft" \
+            --prompt_vector_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}" \
             --num_mask 10 \
             --init_method ${INIT} \
             --iter_method ${ITER} \
@@ -96,15 +94,13 @@ do
             --beam_size 5 \
             --batch_size ${BATCHSIZE} \
             --seed 0 \
-            --draft \
             --prompt_token_len ${PROMPT_TOKEN_LEN} \
-            --output_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}_draft/MASKED"
+            --output_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}/MASKED" > ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPT}/${INIT}/${ITER}/MASKED/log.log
     else
         PROMPTFILE=$(basename $PROMPT)
         PROMPTNAME="${PROMPTFILE%.*}"
         echo "-- compute pronpt analysis"
-        # mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}
-        mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}
+        mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}
 
         python ${DIR}/BioLAMA/run_optiprompt.py \
             --model_name_or_path "${MODEL[i]}" \
@@ -120,20 +116,19 @@ do
             --lr 3e-3 \
             --epochs 10 \
             --seed 0 \
-            --draft \
             --init_manual_template \
             --prompt_path "${PROMPT}" \
-            --output_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}"
+            --output_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}" > ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/log.log
 
         echo "-- compute pronpt bias"
-        mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}_imt_draft/MASKED
+        mkdir -p ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED
         
         python ${DIR}/BioLAMA/run_optiprompt.py \
             --model_name_or_path "${MODEL[i]}" \
             --train_path "${TRAIN_PATH}" \
             --dev_path "${DEV_PATH}" \
             --test_path "${DIR}/data/${TASK}/triples_processed/*/${MODELTYPE[i]}_masked.jsonl" \
-            --prompt_vector_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}_imt_draft" \
+            --prompt_vector_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}" \
             --num_mask 10 \
             --init_method ${INIT} \
             --iter_method ${ITER} \
@@ -141,10 +136,9 @@ do
             --beam_size 5 \
             --batch_size ${BATCHSIZE} \
             --seed 0 \
-            --draft \
             --init_manual_template \
             --prompt_path "${PROMPT}" \
-            --output_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}_imt_draft/MASKED"
+            --output_dir "${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED" > ${DIR}/output/${TASK}/opti/${MODELNAME[i]}/${PROMPTNAME}/${INIT}/${ITER}/MASKED/log.log
     fi
     done
 done
