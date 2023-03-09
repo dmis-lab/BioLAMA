@@ -8,7 +8,6 @@ from transformers import (
     RobertaTokenizer
 )
 
-random.seed(0)
 class FactDataset(Dataset):
     def __init__(self, input_file, prompt_token_len, tokenizer, template):
         print(f"FactDataset! input_file={input_file} prompt_token_len={prompt_token_len}")

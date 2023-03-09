@@ -54,11 +54,14 @@ def set_seed(seed):
     Set the random seed.
     """
     print("- seed: " + str(seed))
-    np.random.seed(seed)
+    random.seed(seed)
+    np.random.RandomState(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
-    random.seed(seed)
-    torch.backends.cudnn.deterministic = True
+    torch.cuda.manual_seed_all(seed)
+
+    # For reproductibility:
+    torch.backends.cudnn.enabled = False
 
 def convert_manual_to_dense(manual_template, base_model, tokenizer):
     def assign_embedding(new_token, token):
